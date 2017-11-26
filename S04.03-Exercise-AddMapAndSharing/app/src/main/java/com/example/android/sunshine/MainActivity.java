@@ -111,6 +111,20 @@ public class MainActivity extends AppCompatActivity implements ForecastAdapterOn
         String location = SunshinePreferences.getPreferredWeatherLocation(this);
         new FetchWeatherTask().execute(location);
     }
+    private void openLocationInMap(){
+        String addressString = "Melbourne";
+        Uri geoLocation = Uri.parse("geo:0,0?q=" + addressString);
+
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(geoLocation);
+
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        } else {
+            Log.d(TAG, "Couldn't call " + geoLocation.toString()
+                    + ", no receiving apps installed!");
+        }
+    }
 
     /**
      * This method is overridden by our MainActivity class in order to handle RecyclerView item
@@ -218,6 +232,9 @@ public class MainActivity extends AppCompatActivity implements ForecastAdapterOn
         if (id == R.id.action_refresh) {
             mForecastAdapter.setWeatherData(null);
             loadWeatherData();
+            return true;
+        }else if (id == R.id.open_map){
+            openLocationInMap();
             return true;
         }
 
